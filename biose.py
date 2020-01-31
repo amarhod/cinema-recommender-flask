@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 #from datetime.datetime import today
 import datetime
 import pprint
+import regex
 from user_agent import get_user_agent
 
 
@@ -46,7 +47,7 @@ def parse_movie_specs(movies):
         return movie_specs
     for movie in movies:
         movie_specs.append({
-        'movie_name': movie.find('span', class_ = "movie-info__title").text,
+        'movie_name': regex.sub(r'\([^)]*\)', '', movie.find('span', class_ = "movie-info__title").text).rstrip(),
         'img_url': movie.find('img')['src']
         })
     return movie_specs
