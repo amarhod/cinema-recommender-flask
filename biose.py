@@ -8,7 +8,7 @@ from user_agent import get_user_agent
 
 def tomorrows_date ():
     date = datetime.datetime.today() + datetime.timedelta(days = 1)
-    return str(datetime.datetime.strftime(date, '%Y-%m-%d'))
+    return datetime.datetime.strftime(date, '%Y-%m-%d')
 
 
 def query_url():
@@ -49,7 +49,6 @@ def parse_movie_specs(movies):
         'movie_name': movie.find('span', class_ = "movie-info__title").text,
         'img_url': movie.find('img')['src']
         })
-        print(movie_specs)
     return movie_specs
 
 def parse_movies(soup):
