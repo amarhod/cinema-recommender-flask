@@ -1,4 +1,7 @@
 from biose import get_movies
-from tinydb import tinyDB, Query
+from tinydb import TinyDB, Query
+
+
 movies_dict = get_movies()
-db = tinyDB('movies.json')
+db = TinyDB('movies.json')
+db.insert_multiple(movies_dict)

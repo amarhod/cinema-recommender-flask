@@ -64,7 +64,5 @@ def get_movies():
 		headers=_get_headers()
     )
     movies = parse_movies(soup)
-    pprint.pprint(movies)
-
-
-get_movies()
+    #pprint.pprint(movies)
+    return movies
