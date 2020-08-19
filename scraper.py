@@ -85,8 +85,7 @@ def write_csv(all_info):
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writeheader()
         for val in all_info:
-            if val is not None:
-              writer.writerow(val)
+            writer.writerow(val)
     
     
 if __name__ == "__main__":
@@ -95,8 +94,9 @@ if __name__ == "__main__":
     all_movies_info = []
     for link in movie_links:
         info = get_movie_info(driver,link)
-        all_movies_info.append(info)
-
+        if info is not None:
+            all_movies_info.append(info)
+    pprint.pprint(all_movies_info)
     write_csv(all_movies_info)
     
     
