@@ -1,5 +1,7 @@
 import sqlite3
 from movies import get_movie_list
+
+#not the best way to handle the database since some of these queries may be vulnerable to sql injections 
 class DatabaseHandler:
 
     def create_table(self,table):#cant use palceholders for table and column names
@@ -26,7 +28,7 @@ class DatabaseHandler:
         self.conn.commit()
         self.conn.close()
 
-    #takes a request as a dict and stores it in the db
+    #takes a movie with its info as a dict and stores it in the db
     def store(self,movie):
         values = (movie["Original_title"],movie["Original_language"],movie["Genre"],movie["Directors"],movie["Actors"],movie["Date"],movie["Description"],)
         l = self.cursor.execute("SELECT * FROM {} WHERE Original_title=?".format(self.table_name),(movie["Original_title"],)).fetchall()
@@ -35,11 +37,12 @@ class DatabaseHandler:
         else:
             self.cursor.execute("INSERT INTO {} VALUES (?,?,?,?,?,?,?)".format(self.table_name),values)
 
-    #takes an ip  and returns all the rows (requests) that came from that ip
+    #returns all the values in the table
     def read_all(self):
         l = self.cursor.execute("SELECT * FROM {}".format(self.table_name)).fetchall()
         return l
     
+    #clears the table 
     def clear_table(self):
         self.cursor.execute("DELETE FROM {}".format(self.table_name))
         self.conn.commit()
@@ -47,6 +50,10 @@ class DatabaseHandler:
     def close_connection(self):
         self.conn.commit()
         self.conn.close()
+    
+    def delete_table(self):
+        self.cursor.execute("DROP TABLE {}".format(self.table_name))
+        self.conn.commit()
 
     #prints all the rows in the table
     def print_table(self):
@@ -59,9 +66,6 @@ class DatabaseHandler:
 
 if __name__ == "__main__":
     with DatabaseHandler('user2') as db:
-       movies = db.cursor.execute("SELECT * FROM user2").fetchall()
-       m = get_movie_list()[0]
-       db.store(m)
-       r = db.cursor.execute("SELECT * FROM user2").fetchall()
-       print(movies)
-       print(r)
+       # db.clear_table()
+        r = db.cursor.execute("SELECT * FROM user2").fetchall()
+        print(r)

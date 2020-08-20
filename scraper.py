@@ -81,22 +81,29 @@ def get_movie_info(driver,href):
 
 def write_csv(all_info):
     with open ("filmstaden.csv",mode="w") as csv_file:
-        fieldnames = ["Directors","Actors","Genre","Original_title","Original_language","Date","Description"]
+        fieldnames = ["Index","Directors","Actors","Genre","Original_title","Original_language","Date","Description"]
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writeheader()
         for val in all_info:
             writer.writerow(val)
-    
-    
-if __name__ == "__main__":
+
+def get_list():
     driver = get_driver()
     movie_links = get_all_movie_links(driver.page_source)
     all_movies_info = []
+    index = 1
     for link in movie_links:
         info = get_movie_info(driver,link)
         if info is not None:
+            info["Index"] = index
+            index = index + 1
             all_movies_info.append(info)
     pprint.pprint(all_movies_info)
     write_csv(all_movies_info)
+    return all_movies_info
+    
+    
+if __name__ == "__main__":
+    get_list()
     
     
