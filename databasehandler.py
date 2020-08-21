@@ -37,10 +37,19 @@ class DatabaseHandler:
         else:
             self.cursor.execute("INSERT INTO {} VALUES (?,?,?,?,?,?,?)".format(self.table_name),values)
 
-    #returns all the values in the table
-    def read_all(self):
+    #returns all the values in the table as a list of dictionaries
+    def read_all_rows(self):
+        value = []
         l = self.cursor.execute("SELECT * FROM {}".format(self.table_name)).fetchall()
-        return l
+        for movie in l:
+             value.append({"Original_title": movie[0],
+             "Original_language": movie[1],
+             "Genre": movie[2],
+             "Directors":movie[3],
+             "Actors": movie[4],
+             "Date": movie[5],
+             "Description":movie[6]})
+        return value
     
     #clears the table 
     def clear_table(self):
@@ -66,6 +75,6 @@ class DatabaseHandler:
 
 if __name__ == "__main__":
     with DatabaseHandler('user2') as db:
-        db.clear_table()
-        r = db.cursor.execute("SELECT * FROM user2").fetchall()
+       # db.clear_table()
+        r = db.read_all_rows()
         print(r)
