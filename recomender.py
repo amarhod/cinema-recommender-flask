@@ -65,7 +65,7 @@ def recommendations(movies_watched ,df):
     top_indexes_filtered = [n for n in top_indexes if n not in indexes]
     for i in top_indexes_filtered:
         movies.append(list(df.index)[i])
-    return movies
+    return movies[0:10]
 
 #test method, disregard
 def rec2(title,df):
