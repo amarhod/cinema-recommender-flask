@@ -48,6 +48,7 @@ def recommendations(title,df):
         movies.append(list(df.index)[i])
     return movies
 
+#test method, disregard
 def rec2(title,df):
     cos_sim = find_similarity(df)
     movies = []

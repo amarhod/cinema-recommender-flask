@@ -66,6 +66,6 @@ class DatabaseHandler:
 
 if __name__ == "__main__":
     with DatabaseHandler('user2') as db:
-       # db.clear_table()
+        db.clear_table()
         r = db.cursor.execute("SELECT * FROM user2").fetchall()
         print(r)
