@@ -65,7 +65,13 @@ def get_movie_info(driver,href):
         attribute_div = body_div.find_all('div',class_="movie-information__meta-attributes")
         genre = get_genre(soup)
         info = []
+        labels = ["Svenska röster:","Originalröster:"] #we want to skip movies that have this labels instead of the actors lable
         for attribute in attribute_div:
+            lables_list = attribute.find_all('div',class_="movie-information__meta-attributes-label") #find all lables to check if one of them is in our black list of lables
+            for lable in lables_list:
+                if lable.text.strip() in labels:
+                    print("Movie without actors, will be skipped!")
+                    return None
             values = attribute.find_all('div',class_="movie-information__meta-attributes-value")
             text = ""
             for value in values:
