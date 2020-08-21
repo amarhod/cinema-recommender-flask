@@ -13,13 +13,14 @@ def read_file(filename='filmstaden.csv'):
     df.fillna('') #fill in empty values cells
     return df
 
+#def add_movie_to_df(df, movie):
 
 def combine_columns(row):
     try:
         return row['Original_title']+ " " + row['Genre'] + " " + row['Directors'] + " " + row['Actors'] + " " + row['Description']
     except Exception as e:
         print("Something went wrong")
-        raise(e) 
+        raise(e)
 
 
 def title_from_index(df,index):
@@ -38,13 +39,31 @@ def find_similarity(df):
     cos_sim = cosine_similarity(count_matrix)
     return cos_sim
 
-def recommendations(title,df):
+def recommendations(movies_watched ,df):
     cos_sim = find_similarity(df)
     movies = []
-    index = index_from_title(df,title)
-    score_series = pd.Series(cos_sim[index]).sort_values(ascending=False)
-    top_ten_indexes  = list(score_series.iloc[1:11].index)
-    for i in top_ten_indexes:
+    indexes = []
+    #Initialize an empty Series object to sum all the scores across several movies that the user has seen
+    summed_score_series = pd.Series(0, dtype="float64")
+
+    for title in movies_watched:
+        #Find index for the movie
+        index = index_from_title(df,title)
+        #Save all the indexes for the movies that the user has seen (used for filtering later)
+        indexes.append(index)
+        #Create a series of all the others titles and their similarity
+        score_series = pd.Series(cos_sim[index])
+        #Add the series to a summed series that aggregates the similarity scores for all movies prev. seen
+        summed_score_series = summed_score_series.add(score_series, fill_value = 0) 
+
+    #Sort the series with the most similar one at index 0 
+    summed_score_series = summed_score_series.sort_values(ascending=False)
+    #Create a list containing the indexes for the top movies.
+    #If no top movie has been seen => 0-10. If one is seen already => 0-11
+    top_indexes = list(summed_score_series.iloc[0:(10+len(indexes))].index)
+    #Remove index for movie already seen. Should result in a list length of 10
+    top_indexes_filtered = [n for n in top_indexes if n not in indexes]
+    for i in top_indexes_filtered:
         movies.append(list(df.index)[i])
     return movies
 
@@ -60,12 +79,13 @@ def rec2(title,df):
 if __name__ == "__main__":
     df = read_file()
     df["Combined_words"] = df.apply(combine_columns,axis=1)
-    #print(df)
+    #print(df.head())
     #print(title_from_index(df,2))
     #print(index_from_title(df,"The Lost Weekend"))
     cos_sim = find_similarity(df)
-    rec1 = recommendations("1917",df)
-    rec2 = rec2("1917",df)
+    movies_watched = ["Bad Boys for Life", "1917"]
+    rec1 = recommendations(movies_watched,df)
+    #rec2 = rec2("1917",df)
     for rec in rec1:
         print(title_from_index(df,rec))
     #print(recomended_movie_indexes)
