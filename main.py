@@ -1,7 +1,8 @@
 from movies import get_movie_list
 from start import ask_user
 import pprint
-from databasehandler import DatabaseHandler
+from database_handler import DatabaseHandler
+from recommender import get_recommendations
 
 def first_time(user):
     user_rating = ask_user()
@@ -28,8 +29,20 @@ def first_time(user):
     with DatabaseHandler(user) as db:
         db.store(order_in_preference[watched-1])
 
-def find_movie(user):
-    pass
+def reorder_dict(dict):
+    #CSV order : Directors, Actors, Genre, Original_title, Original_language, Date, Description
+    #SQL order : Original_title, Original_language, Genre, Directors, Actors, Date, Description
+    desired_order_list = [3, 4, 2, 0, 1, 5, 6]
+    reordered_dict = {k: dict[k] for k in desired_order_list}
+    return reordered_dict
+
+#Calls "main" func in recommender.py with a list of dicts (containing each movie seen)
+#Returns an array of indexes for top 10 movies recommended
+#TO-DO: Return (from recommender.py) more than just index so that we can display the top 10 recommended list properly
+def find_movie(movies_seen):
+    movies = get_recommendations(movies_seen)
+    print(movies)
+    return movies
 
 
 def main():
@@ -37,10 +50,10 @@ def main():
     user = input("Enter username: \n")
     with DatabaseHandler(f"{user}") as db:
         db.create_table(user)
-        all_rows = db.read_all()
+        all_rows = db.read_all_rows()
         #check if there is prior info on user
         if len(all_rows) > 0:
-            find_movie(user)
+            movies_recommended = find_movie(all_rows)
             print("Passed!! Stage 2 is next")
         else:
             print("It seems this is your first time using this program.")

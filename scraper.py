@@ -1,16 +1,16 @@
 import requests
-from bs4 import BeautifulSoup
 import datetime
 import pprint
-from selenium import webdriver 
-from selenium.webdriver.chrome.options import Options
 import time
 import csv
+from bs4 import BeautifulSoup
+from selenium import webdriver 
+from selenium.webdriver.chrome.options import Options
+
 
 def tomorrows_date ():
     date = datetime.datetime.today() + datetime.timedelta(days = 1)
     return datetime.datetime.strftime(date, '%Y-%m-%d')
-
 
 def start_url():
     return 'https://www.filmstaden.se/filmer-och-trailers/'
@@ -18,17 +18,19 @@ def start_url():
 def query_movie_page(href):
     return f"https://www.filmstaden.se{href}" 
 
-
 def get_driver():
     #DRIVER_PATH = "/home/natan/Downloads/geckodriver"
     #driver = webdriver.Firefox(executable_path=DRIVER_PATH)
     chrome_options = Options()
     chrome_options.add_argument("--headless")
-    driver = webdriver.Chrome(options=chrome_options,executable_path="/usr/lib/chromium-browser/chromedriver")
+    driver = webdriver.Chrome(options=chrome_options,executable_path="/usr/local/bin/chromedriver")
     driver.get(start_url())
     time.sleep(1) 
     button = driver.find_element_by_xpath('//*[@id="Aurelia"]/div[3]/div/div/div[2]/span/button')
-    button.click()
+    try:
+        button.click()
+    except:
+        print("button click failed")    
     return driver
 
 def get_all_movie_links(page_source):
@@ -41,8 +43,7 @@ def get_all_movie_links(page_source):
         all_links.append(link)
     return all_links
 
-
-#the genre section can have multiple genres, so we need them all
+#The genre section can have multiple genres, so we need them all
 def get_genre(soup):
     genre = ""
     try:
@@ -55,9 +56,28 @@ def get_genre(soup):
     except:
         return soup.find('div',class_="au-target movie-information__poster-section-genre movie-information__genre--last").text
 
+#Stores the cover poster images locally in Flask/static/image
+def download_image(url):
+    if(url == None):
+        print("empty img url")
+        return None
+    url_path=url.split('/')
+    #https......./2k6h41.jpg -> 2k6h41
+    name = url_path[len(url_path)-1]
+    static_path = 'Flask/static/images/'+name
+    try:
+        f = open(static_path,'rb')
+        f.close()
+        print("image already stored")
+    except:
+        request = requests.get(url)
+        f = open(static_path, 'wb')
+        f.write(request.content)
+        f.close()
+
 def get_movie_info(driver,href):
     driver.get(query_movie_page(href))
-    time.sleep(1)
+    time.sleep(2)
     soup = BeautifulSoup(driver.page_source,features="html.parser")
     try:
         body_div = soup.find('div',class_='movie-information__body-section block__wrapper block__wrapper--regular')
@@ -77,8 +97,16 @@ def get_movie_info(driver,href):
             for value in values:
                 text = text + value.text
             info.append(text)
-
-        all_info = {"Directors":info[0],"Actors":info[1],"Genre":genre,"Original_title":info[2],"Original_language":info[3],"Date":info[4],"Description":movie_description}
+        #Extract the cover image link
+        try:
+            img_body_div = soup.find('div',class_='movie-information__top-section')
+            img_url_src = img_body_div.find('img', class_='movie-information__poster-section-image au-target')['src']
+            img_url = img_url_src.split('?')[0]
+            download_image(img_url)
+        except:
+            img_url ="FAILED_EXTRACTION"
+        all_info = {"Directors":info[0],"Actors":info[1],"Genre":genre,"Original_title":info[2],
+        "Original_language":info[3],"Date":info[4],"Description":movie_description,"Img_url": img_url}
         return all_info
     except Exception as e:
         print("Some info  for this movie is missing for this movie probably, so it will be skipped :)")
@@ -87,7 +115,7 @@ def get_movie_info(driver,href):
 
 def write_csv(all_info):
     with open ("filmstaden.csv",mode="w") as csv_file:
-        fieldnames = ["Index","Directors","Actors","Genre","Original_title","Original_language","Date","Description"]
+        fieldnames = ["Index","Directors","Actors","Genre","Original_title","Original_language","Date","Description","Img_url"]
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writeheader()
         for val in all_info:
