@@ -1,12 +1,14 @@
 import os
 from flask import Flask, render_template, url_for, flash, redirect
-from Flask.forms import RegistrationForm, LoginForm
+from BioFilmer.Flask.forms import RegistrationForm, LoginForm
 from BioFilmer.movies import get_movie_list
 
-SECRET_KEY = os.getENV('SECRET_KEY_FLASK')
+SECRET_KEY = os.urandom(32)
 app = Flask(__name__)
 app.config['SECRET_KEY'] = SECRET_KEY
 
+movies_list = get_movie_list()
+#pprint(movies_list)
 
 @app.route('/')
 @app.route('/home')
@@ -30,8 +32,6 @@ def login():
             return redirect(url_for('home'))
         else:
             flash(f'Log in unsuccessful.','danger')
-
-
     return render_template('login.html',title='Log In', form=form)
 
 @app.route('/account')
@@ -40,7 +40,7 @@ def account():
 
 @app.route('/movies')
 def movies():
-    return render_template('movies.html',title='Movies', movies=moviess)
+    return render_template('movies.html',title='Movies', movies=movies_list)
 
 
 if __name__ == '__main__':
