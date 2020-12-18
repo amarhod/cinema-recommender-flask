@@ -1,5 +1,4 @@
 import sqlite3
-from movies import get_movie_list
 
 #not the best way to handle the database since some of these queries may be vulnerable to sql injections 
 class DatabaseHandler:
@@ -17,7 +16,7 @@ class DatabaseHandler:
         self.conn.commit()
 
     def __init__(self,name):
-        self.conn = sqlite3.connect('watched.db')
+        self.conn = sqlite3.connect('../watched.db')
         self.cursor = self.conn.cursor()
         self.table_name = name
     
@@ -72,9 +71,14 @@ class DatabaseHandler:
             print(movie)
         print("There are {} rows in the {} table".format(str(len(l)),self.table_name))
 
+    def show_tables(self):
+        self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        print(self.cursor.fetchall())
+
 
 if __name__ == "__main__":
-    with DatabaseHandler('user2') as db:
+    with DatabaseHandler('user1') as db:
        # db.clear_table()
         r = db.read_all_rows()
         print(r)
+        db.show_tables()
