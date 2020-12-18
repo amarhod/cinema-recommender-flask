@@ -132,7 +132,7 @@ def get_list():
             info["Index"] = index
             index = index + 1
             all_movies_info.append(info)
-    pprint.pprint(all_movies_info)
+    #pprint.pprint(all_movies_info)
     write_csv(all_movies_info)
     return all_movies_info
     

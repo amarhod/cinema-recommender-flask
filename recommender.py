@@ -6,7 +6,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 
 
-def read_file(filename='filmstaden.csv'):
+def read_file(filename='../filmstaden.csv'):
     df = pd.read_csv(filename)
     df = df[['Index','Directors','Actors','Genre','Original_title','Original_language','Date','Description','Img_url']]
     #print(df.head())
