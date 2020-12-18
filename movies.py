@@ -526,10 +526,10 @@ l2 = [{'Actors': ' George Mackay, Dean-Charles Chapman, Richard Madden, Benedict
 def get_movie_list():
   df = read_file()
   movie_list = df.values.tolist()
-  #Extract the image names from the urls. Needed later to find local copies in Flask/static/images 
+  #Extract the image names from the URLs. Needed later to find local copies in Flask/static/images 
   for movie in movie_list:
-    url=movie[-1]
-    url_path=url.split('/')
+    url = movie[-1]
+    url_path = url.split('/')
     name = url_path[len(url_path)-1]
     movie[-1] = name
   return movie_list
