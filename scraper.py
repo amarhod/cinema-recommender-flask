@@ -25,9 +25,14 @@ def get_driver():
     chrome_options.add_argument("--headless")
     driver = webdriver.Chrome(options=chrome_options,executable_path="/usr/local/bin/chromedriver")
     driver.get(start_url())
-    time.sleep(1) 
-    button = driver.find_element_by_xpath('//*[@id="Aurelia"]/div[3]/div/div/div[2]/span/button')
+    #click on  the accept cookie button,
     try:
+        time.sleep(2) #not the best way but waiting for loading doesnt seem to do the trick
+        but = driver.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]')
+        but.click()
+        time.sleep(2)
+        #click on the save region button
+        button = driver.find_element_by_xpath('//*[@id="Aurelia"]/div[2]/div/div/div[2]/span/button')
         button.click()
     except:
         print("button click failed")    
@@ -138,6 +143,4 @@ def get_list():
     
     
 if __name__ == "__main__":
-    get_list()
-    
-    
+    pprint.pprint(get_list())
