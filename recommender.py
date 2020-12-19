@@ -5,7 +5,7 @@ from rake_nltk import Rake
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 
-
+#OBS change the path to only 'filmstaden.csv' when running this script directly instead of running it from the app.py 
 def read_file(filename='../filmstaden.csv'):
     df = pd.read_csv(filename)
     df = df[['Index','Directors','Actors','Genre','Original_title','Original_language','Date','Description','Img_url']]
@@ -48,7 +48,7 @@ def recommendations(movies_watched ,df):
         #Save all the indexes for the movies that the user has seen (used for filtering later)
         indexes.append(index)
         #Create a series of all the others titles and their similarity
-        score_series = pd.Series(cos_sim[index])
+        score_series = pd.Series(cos_sim[index-1])
         #Add the series to a summed series that aggregates the similarity scores for all movies prev. seen
         summed_score_series = summed_score_series.add(score_series, fill_value = 0) 
 
@@ -91,8 +91,6 @@ def get_recommendations(movies_seen):
         movie['Index']=length+1
         movies_seen_indexes.append(length+1)
         df = df.append(movie, ignore_index=True)
-    #print(df)
-    #print(movies_seen_title)
         
     df["Combined_words"] = df.apply(combine_columns,axis=1)
     #print(df.head())
@@ -108,5 +106,29 @@ def get_recommendations(movies_seen):
         #print(rec)
         #print(title_from_index(df,rec))
     return (recommended_movies, rec1)
-    
-    
+
+if __name__ == "__main__":
+    movies_seen = [{'Actors': ' Lambert Wilson, Olga Kurylenko, Sidse Babett Knudsen, Riccardo '
+            'Scamarcio, Eduardo Noriega',
+  'Date': ' 17 jul 2020',
+  'Description': 'Nio översättare har lyckats få ett riktigt drömjobb. '
+                 'Tillsammans ska de översätta den avslutande delen av en '
+                 'omåttligt populär fantasytrilogi. Hemlighetsmakeriet inför '
+                 'boksläppet är på den nivån att de får utföra arbetet '
+                 'isolerade i en lyxigt inredd bunker.',
+  'Directors': ' Régis Roinsard',
+  'Genre': 'Drama, Thriller',
+  'Original_language': ' Engelska,  Franska ',
+  'Original_title': ' Les traducteurs'},{'Actors': ' George Mackay, Dean-Charles Chapman, Richard Madden, Benedict '
+            'Cumberbatch, Colin Firth, Mark Strong',
+  'Date': ' 31 jan 2020',
+  'Description': 'Två brittiska soldater får i uppdrag att ta sig långt in '
+                 'bakom fiendelinjen för att varna ett regemente för ett '
+                 'bakhåll som tyskarna planerar.',
+  'Directors': ' Sam Mendes',
+  'Genre': 'Drama, Krig',
+  'Original_language': ' Engelska ',
+  'Original_title': ' 1917'}]
+    rec = get_recommendations(movies_seen)
+    print(rec[0])
+   # print(rec[1])
