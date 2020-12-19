@@ -10,13 +10,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = SECRET_KEY
 
 movies_list = get_movie_list()
-#pprint(movies_list)
-
-with DatabaseHandler('user1') as handler:
-    movies_seen = handler.read_all_rows()
-    pprint.pprint(movies_seen)
-    recommended_movies = get_recommendations(movies_seen)
-
 @app.route('/')
 @app.route('/home')
 def home():
@@ -51,6 +44,28 @@ def movies():
 
 @app.route('/recommendations')
 def recommendations():
-    return render_template('recommended.html',title='Recommended',movies=recommended_movies)
+    #TO-DO: for some reason the recommendations seem to always be the same. or maybe its me doing it wrong somehow
+    final_recommendations = []
+    with DatabaseHandler('user1') as handler:
+       # movies_seen = handler.read_all_rows()
+        movies_seen = [{'Actors': ' Christian Bale, Michael Caine, Ken Watanabe, Liam Neeson, Katie '
+                'Holmes, Gary Oldman, Rutger Hauer, Morgan Freeman',
+      'Date': ' 24 jun 2020',
+      'Description': 'Den ursprungliga berättelsen om hur Bruce Wayne bestämmer '
+                     'sig för det goda och sitt alter ego Batman. Bruce Wayne ser '
+                     'sina föräldrar mördas och vill hämnas på förövaren. Men - '
+                     'han inser att hämnd inte löser något, utan blir i stället '
+                     'Batman.',
+      'Directors': ' Christopher Nolan',
+      'Genre': 'Action, Äventyr',
+      'Original_language': ' Engelska ',
+      'Original_title': ' Batman Begins'}]
+        pprint.pprint(movies_seen)
+        recommended_movies = get_recommendations(movies_seen)
+        #from the movies list in theater, extract the indexes that match with the ones that the get recommendations returned 
+        for i in range(0,len(movies_list)):
+            if movies_list[i][0] in recommended_movies[1]:
+                final_recommendations.append(movies_list[i])
+    return render_template('recommendations.html',title='Recommended',movies=final_recommendations)
 if __name__ == '__main__':
     app.run(debug=True)
