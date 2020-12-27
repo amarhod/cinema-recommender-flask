@@ -43,9 +43,11 @@ my_movies = [{'Actors': ' George Mackay, Dean-Charles Chapman, Richard Madden, B
   'Genre': 'Action, Äventyr',
   'Original_language': ' Engelska ',
   'Original_title': ' Batman Begins'}]
-def test_user(name="user2"):
+def test_user(name="user1"):
   handler = db.DatabaseHandler(name)
   handler.create_table(name)
+  for movie in my_movies:
+    handler.store(movie)
   handler.print_table()
   handler.close_connection()
 

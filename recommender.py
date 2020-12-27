@@ -23,6 +23,9 @@ def combine_columns(row):
 def title_from_index(df,index):
     return df[df.Index==index]["Original_title"].values[0]
 
+def rating_from_index(df,index):
+    return df[df.Index==index]["score"].values[0]
+
 def index_from_title(df,title):
     title_list = df['Original_title'].tolist()
     common = difflib.get_close_matches(title,title_list,1)
@@ -49,9 +52,12 @@ def recommendations(movies_watched ,df):
         indexes.append(index)
         #Create a series of all the others titles and their similarity
         score_series = pd.Series(cos_sim[index-1])
+        #Fetch user rating and invert the similarity values if the user did not like the movie
+        # rating = rating_from_index(df,index)
+        # if(rating == -1):
+        #     score_series = score_series.apply(lambda x: 1-x)
         #Add the series to a summed series that aggregates the similarity scores for all movies prev. seen
         summed_score_series = summed_score_series.add(score_series, fill_value = 0) 
-
     #Sort the series with the most similar one at index 0 
     summed_score_series = summed_score_series.sort_values(ascending=False)
     #Create a list containing the indexes for the top movies.
