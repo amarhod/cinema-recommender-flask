@@ -4,7 +4,7 @@ import difflib
 from rake_nltk import Rake
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
-
+from BioFilmer.database_handler import DatabaseHandler
 #OBS change the path to only 'filmstaden.csv' when running this script directly instead of running it from the app.py 
 def read_file(filename='../filmstaden.csv'):
     df = pd.read_csv(filename)
@@ -42,6 +42,7 @@ def recommendations(movies_watched ,df):
     cos_sim = find_similarity(df)
     movies = []
     indexes = []
+    db = DatabaseHandler("user1")
     #Initialize an empty Series object to sum all the scores across several movies that the user has seen
     summed_score_series = pd.Series(0, dtype="float64")
     #TO-DO: Handle case if for some reason no movie is in the list
@@ -53,11 +54,14 @@ def recommendations(movies_watched ,df):
         #Create a series of all the others titles and their similarity
         score_series = pd.Series(cos_sim[index-1])
         #Fetch user rating and invert the similarity values if the user did not like the movie
-        # rating = rating_from_index(df,index)
-        # if(rating == -1):
-        #     score_series = score_series.apply(lambda x: 1-x)
+        rating = db.get_rating(title)
+        print(f"{title} has rating: {rating}")
+        if(rating == -1):
+            score_series = score_series.apply(lambda x: 1-x)
         #Add the series to a summed series that aggregates the similarity scores for all movies prev. seen
         summed_score_series = summed_score_series.add(score_series, fill_value = 0) 
+    
+    db.close_connection()
     #Sort the series with the most similar one at index 0 
     summed_score_series = summed_score_series.sort_values(ascending=False)
     #Create a list containing the indexes for the top movies.
@@ -78,10 +82,10 @@ def rec2(title,df):
     sim_movies = list(enumerate(cos_sim[index]))
     sim_movies_sorted = sorted(sim_movies,key=lambda x:x[1],reverse=True)
     return sim_movies_sorted
-
+"""
 def dict_to_series(dictt):
     series = pd.Series(dictt, index = ["Original_title", "Original_language", "Genre", "Directors", "Actors", "Date", "Description"])
-    return series
+    return series"""
 
 def get_recommendations(movies_seen):
     df = read_file()
