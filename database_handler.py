@@ -11,7 +11,8 @@ class DatabaseHandler:
                     Directors text,
                     Actors text,
                     Date text,
-                    Description text
+                    Description text,
+                    Rating int
                     )""".format(table))
         self.conn.commit()
 
@@ -29,12 +30,12 @@ class DatabaseHandler:
 
     #takes a movie with its info as a dict and stores it in the db
     def store(self,movie):
-        values = (movie["Original_title"],movie["Original_language"],movie["Genre"],movie["Directors"],movie["Actors"],movie["Date"],movie["Description"],)
+        values = (movie["Original_title"].strip(),movie["Original_language"],movie["Genre"],movie["Directors"],movie["Actors"],movie["Date"],movie["Description"],movie["Rating"],)
         l = self.cursor.execute("SELECT * FROM {} WHERE Original_title=?".format(self.table_name),(movie["Original_title"],)).fetchall()
         if len(l) > 0:
             return
         else:
-            self.cursor.execute("INSERT INTO {} VALUES (?,?,?,?,?,?,?)".format(self.table_name),values)
+            self.cursor.execute("INSERT INTO {} VALUES (?,?,?,?,?,?,?,?)".format(self.table_name),values)
 
     #returns all the values in the table as a list of dictionaries
     def read_all_rows(self):
@@ -49,6 +50,15 @@ class DatabaseHandler:
              "Date": movie[5],
              "Description":movie[6]})
         return value
+
+    def get_rating(self,title):
+        try:
+            l = self.cursor.execute("SELECT Rating FROM {} WHERE Original_title=?".format(self.table_name),(title,)).fetchall()
+            return l[0]
+        except Exception as e:
+            print(e)
+            return 0
+        
     
     #clears the table 
     def clear_table(self):
