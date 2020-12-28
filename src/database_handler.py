@@ -17,7 +17,7 @@ class DatabaseHandler:
         self.conn.commit()
 
     def __init__(self,name):
-        self.conn = sqlite3.connect('../watched.db')
+        self.conn = sqlite3.connect('watched.db')
         self.cursor = self.conn.cursor()
         self.table_name = name
     

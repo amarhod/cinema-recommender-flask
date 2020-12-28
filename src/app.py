@@ -1,12 +1,12 @@
 import os
 import pprint
 from flask import Flask, render_template, url_for, flash, redirect, request
-from BioFilmer.Flask.forms import RegistrationForm, LoginForm, FlaskForm
+from forms import RegistrationForm, LoginForm, FlaskForm
 from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired
-from BioFilmer.movies import get_movie_list, match_movie
-from BioFilmer.recommender import get_recommendations
-from BioFilmer.database_handler import DatabaseHandler
+from movies import get_movie_list, match_movie
+from recommender import get_recommendations
+from database_handler import DatabaseHandler
 SECRET_KEY = os.urandom(32)
 app = Flask(__name__)
 app.config['SECRET_KEY'] = SECRET_KEY

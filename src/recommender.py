@@ -4,9 +4,9 @@ import difflib
 from rake_nltk import Rake
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
-from BioFilmer.database_handler import DatabaseHandler
+from database_handler import DatabaseHandler
 #OBS change the path to only 'filmstaden.csv' when running this script directly instead of running it from the app.py 
-def read_file(filename='../filmstaden.csv'):
+def read_file(filename='filmstaden.csv'):
     df = pd.read_csv(filename)
     df = df[['Index','Directors','Actors','Genre','Original_title','Original_language','Date','Description','Img_url']]
     df.fillna('') #fill in empty values cells

@@ -1,4 +1,4 @@
-from BioFilmer.recommender import read_file
+from recommender import read_file
 from pprint import pprint
 
 l2 = [{'Actors': ' George Mackay, Dean-Charles Chapman, Richard Madden, Benedict '
