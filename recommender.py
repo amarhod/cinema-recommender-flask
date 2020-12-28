@@ -9,8 +9,8 @@ from BioFilmer.database_handler import DatabaseHandler
 def read_file(filename='../filmstaden.csv'):
     df = pd.read_csv(filename)
     df = df[['Index','Directors','Actors','Genre','Original_title','Original_language','Date','Description','Img_url']]
-    #print(df.head())
     df.fillna('') #fill in empty values cells
+    df['Original_title'] = df['Original_title'].str.strip()
     return df
 
 def combine_columns(row):
@@ -27,10 +27,26 @@ def rating_from_index(df,index):
     return df[df.Index==index]["score"].values[0]
 
 def index_from_title(df,title):
-    title_list = df['Original_title'].tolist()
-    common = difflib.get_close_matches(title,title_list,1)
-    titlesim = common[0]
-    return df[df.Original_title ==titlesim]["Index"].values[0]
+    #Since we append movie history to the df before finding simularities, there might be duplicates
+    indexes = df[df.Original_title==title.strip()]["Index"].values
+    low = 10000 
+    #Return the lowest indexed version
+    for ind in indexes:
+        if ind < low:
+            low = ind
+    if low == 10000:
+        low = None
+    # title_list = df['Original_title'].tolist()
+    # common = difflib.get_close_matches(title,title_list,1)
+    # titlesim = common[0]
+    # return df[df.Original_title ==titlesim]["Index"].values[0]
+    return low
+
+def indexes_from_title(df,title):
+    #Since we append movie history to the df before finding simularities, there might be duplicates
+    indexes = df[df.Original_title==title.strip()]["Index"].values.tolist()
+    #print(f'for movie: {title}, the indexes are: {indexes}')
+    return indexes
 
 def find_similarity(df):
     cv = CountVectorizer()
@@ -50,7 +66,7 @@ def recommendations(movies_watched ,df):
         #Find index for the movie
         index = index_from_title(df,title)
         #Save all the indexes for the movies that the user has seen (used for filtering later)
-        indexes.append(index)
+        indexes += indexes_from_title(df,title)
         #Create a series of all the others titles and their similarity
         score_series = pd.Series(cos_sim[index-1])
         #Fetch user rating and invert the similarity values if the user did not like the movie
@@ -71,6 +87,7 @@ def recommendations(movies_watched ,df):
     #Remove index for movie already seen. Should result in a list length of 10
     top_indexes_filtered = [n for n in top_indexes if n not in indexes]
     for i in top_indexes_filtered:
+        #print(f'adding movie{(list(df.index)[i])}')
         movies.append(list(df.index)[i])
     return movies[0:10]
 
@@ -103,18 +120,9 @@ def get_recommendations(movies_seen):
         df = df.append(movie, ignore_index=True)
         
     df["Combined_words"] = df.apply(combine_columns,axis=1)
-    #print(df.head())
-    #print(title_from_index(df,2))
-    #print(index_from_title(df,"The Lost Weekend"))
     cos_sim = find_similarity(df)
-    #movies_seen_title = ["Bad Boys for Life", "1917"]
     rec1 = recommendations(movies_seen_title,df)
     recommended_movies = df[df.Index.isin(rec1)]
-    #print(recommended_movies)
-    #rec2 = rec2("1917",df)
-    #for rec in rec1:
-        #print(rec)
-        #print(title_from_index(df,rec))
     return (recommended_movies, rec1)
 
 if __name__ == "__main__":
