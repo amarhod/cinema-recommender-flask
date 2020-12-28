@@ -101,7 +101,7 @@ def get_movie_info(driver,href):
             text = ""
             for value in values:
                 text = text + value.text
-            info.append(text)
+            info.append(text.strip())
         #Extract the cover image link
         try:
             img_body_div = soup.find('div',class_='movie-information__top-section')
