@@ -1,4 +1,5 @@
 from BioFilmer.recommender import read_file
+from pprint import pprint
 
 l2 = [{'Actors': ' George Mackay, Dean-Charles Chapman, Richard Madden, Benedict '
             'Cumberbatch, Colin Firth, Mark Strong',
@@ -9,7 +10,7 @@ l2 = [{'Actors': ' George Mackay, Dean-Charles Chapman, Richard Madden, Benedict
   'Directors': ' Sam Mendes',
   'Genre': 'Drama, Krig',
   'Original_language': ' Engelska ',
-  'Original_title': ' 1917'},
+  'Original_title': '1917'},
  {'Actors': ' Christos Loulis, Ulrich Tukur',
   'Date': ' 10 jul 2020',
   'Description': 'I kölvattnet av börskraschen som startade i USA 2007 är '
@@ -523,6 +524,21 @@ l2 = [{'Actors': ' George Mackay, Dean-Charles Chapman, Richard Madden, Benedict
   'Original_language': ' Engelska,  Franska ',
   'Original_title': ' Les traducteurs'}]
 
+#Finds the movie object for a given title
+def match_movie(title, movies):
+  movie_dict = {}
+  for movie in movies:
+    if movie[4].strip() == title.strip():
+      movie_dict['Original_title'] = movie[4].strip()
+      movie_dict['Original_language'] = movie[5]
+      movie_dict['Genre'] = movie[3]
+      movie_dict['Directors'] = movie[1]
+      movie_dict['Actors'] = movie[2]
+      movie_dict['Date'] = movie[6]
+      movie_dict['Description'] = movie[7]
+      return movie_dict
+  return None
+
 def get_movie_list():
   df = read_file()
   movie_list = df.values.tolist()
@@ -533,3 +549,11 @@ def get_movie_list():
     name = url_path[len(url_path)-1]
     movie[-1] = name
   return movie_list
+
+if __name__ == '__main__':
+  movies = get_movie_list()
+  title = 'After we collided'
+  movie = match_movie(title, movies)
+  for (index, value) in enumerate(movie):
+    print(index, value)
+    print()

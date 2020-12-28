@@ -31,7 +31,7 @@ class DatabaseHandler:
     #takes a movie with its info as a dict and stores it in the db
     def store(self,movie):
         values = (movie["Original_title"].strip(),movie["Original_language"],movie["Genre"],movie["Directors"],movie["Actors"],movie["Date"],movie["Description"],movie["Rating"],)
-        l = self.cursor.execute("SELECT * FROM {} WHERE Original_title=?".format(self.table_name),(movie["Original_title"],)).fetchall()
+        l = self.cursor.execute("SELECT * FROM {} WHERE Original_title=?".format(self.table_name),(movie["Original_title"].strip(),)).fetchall()
         if len(l) > 0:
             return
         else:
