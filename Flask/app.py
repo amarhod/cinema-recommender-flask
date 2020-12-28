@@ -48,15 +48,12 @@ def recommendations():
     final_recommendations = []
     with DatabaseHandler('user1') as handler:
         movies_seen = handler.read_all_rows()
-        #pprint.pprint(movies_seen)
         recommended_movies_indexes = get_recommendations(movies_seen)[1]
         #from the movies list in theater, extract the indexes that match with the ones that the get recommendations returned
         for i in range(len(recommended_movies_indexes)):
             for j in range(len(movies_list)):
                 if recommended_movies_indexes[i] == movies_list[j][0]:
                     final_recommendations.append(movies_list[j])
-            # if movies_list[i][0] in recommended_movies[1]:
-            #     final_recommendations.append(movies_list[i])
     return render_template('recommendations.html',title='Recommended',movies=final_recommendations)
 if __name__ == '__main__':
     app.run(debug=True)
