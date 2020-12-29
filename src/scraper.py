@@ -3,10 +3,12 @@ import datetime
 import pprint
 import time
 import csv
+import os
 from bs4 import BeautifulSoup
 from selenium import webdriver 
 from selenium.webdriver.chrome.options import Options
 
+DRIVER = os.getenv('CHROMEDRIVER')
 
 def tomorrows_date ():
     date = datetime.datetime.today() + datetime.timedelta(days = 1)
@@ -19,13 +21,11 @@ def query_movie_page(href):
     return f"https://www.filmstaden.se{href}" 
 
 def get_driver():
-    #DRIVER_PATH = "/home/natan/Downloads/geckodriver"
-    #driver = webdriver.Firefox(executable_path=DRIVER_PATH)
     chrome_options = Options()
     chrome_options.add_argument("--headless")
-    driver = webdriver.Chrome(options=chrome_options,executable_path="/usr/local/bin/chromedriver")
+    driver = webdriver.Chrome(options=chrome_options,executable_path=DRIVER)
     driver.get(start_url())
-    #click on  the accept cookie button,
+    #click on the accept cookie button,
     try:
         time.sleep(2) #not the best way but waiting for loading doesnt seem to do the trick
         but = driver.find_element_by_xpath('//*[@id="onetrust-accept-btn-handler"]')
@@ -69,7 +69,7 @@ def download_image(url):
     url_path=url.split('/')
     #https......./2k6h41.jpg -> 2k6h41
     name = url_path[len(url_path)-1]
-    static_path = 'Flask/static/images/'+name
+    static_path = '/static/images/'+name
     try:
         f = open(static_path,'rb')
         f.close()
