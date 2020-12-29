@@ -4,6 +4,7 @@ src/__pycache__
 .DS_Store
 *.csv
 *.db
-src/static/images
+src/static/images/*
+!src/static/images/.gitkeep
 *.pyc
 *.swp

@@ -1,4 +1,5 @@
 beautifulsoup4==4.9.3
+bs4==0.0.1
 certifi==2020.12.5
 chardet==4.0.0
 click==7.1.2
@@ -12,7 +13,6 @@ MarkupSafe==1.1.1
 nltk==3.5
 numpy==1.19.4
 pandas==1.1.5
-pkg-resources==0.0.0
 python-dateutil==2.8.1
 pytz==2020.4
 rake-nltk==1.0.4
