@@ -1,13 +1,13 @@
-## Cinema recommender (WIP)
+## Cinema recommender
 
 A cinema recommender implemented in Flask.
-By scraping current movies on cinema (Filmstaden), the user gets recommendations based on preference and prior watch history.
+By scraping current movies on cinema (Filmstaden), the user gets recommendations based on similarity score with prior watched movies.
 
 ## Code functionality 
-- **scraper** - Scrapes Filmstaden on current movies and stores movie information in a .csv file as well as storing the movie posters locally.
+- **scraper** - Scrapes Filmstaden for current movies and stores movie information in a .csv file as well as storing the movie posters locally.
 - **recommender** - Based on previously seen movies and the rating by the user, finds current movies with the highest similarity score (cosine similarity).
 - **database_handler** - Handles all the interaction with the local SQLite DB.
-- **app** - Flask app that displays all the movies on cinema and the recommended movies for a mock user.
+- **app** - Flask app that displays all the movies on cinema and the recommended movies for a mock user. The user can enter rating on a given movie so that it gets stored in the user DB.
   
 ## How to run
 How to run in the terminal:
@@ -23,7 +23,8 @@ wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome-stable_current_amd64.deb
 
 3. Install chromedriver and add it to ENV
-https://chromedriver.storage.googleapis.com/index.html?path=87.0.4280.88/
+wget https://chromedriver.storage.googleapis.com/87.0.4280.88/chromedriver_linux64.zip
+unzip chromedriver_linux64.zip
 CHROMEDRIVER="path-to-chromedriver"
 
 4. Scrape movies from Filmstaden
