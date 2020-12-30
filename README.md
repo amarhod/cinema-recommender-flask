@@ -36,3 +36,5 @@ python3 test_user1.py
 6. Run Flask website
 flask run
 ```
+## Demo
+![Demo](Demo.gif)
