@@ -37,4 +37,4 @@ python3 test_user1.py
 flask run
 ```
 ## Demo
-<img src=Demo.gif width=75% height=75%>
+<img src=Demo.gif width=100% height=100%>
