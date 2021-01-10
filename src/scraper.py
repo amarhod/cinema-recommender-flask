@@ -69,7 +69,7 @@ def download_image(url):
     url_path=url.split('/')
     #https......./2k6h41.jpg -> 2k6h41
     name = url_path[len(url_path)-1]
-    static_path = '/static/images/'+name
+    static_path = 'static/images/'+name
     try:
         f = open(static_path,'rb')
         f.close()
