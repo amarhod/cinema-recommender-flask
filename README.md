@@ -22,8 +22,9 @@ pip3 install -r requirements.txt
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome-stable_current_amd64.deb
 
-3. Install chromedriver and add it to ENV
-wget https://chromedriver.storage.googleapis.com/87.0.4280.88/chromedriver_linux64.zip
+3. Install latest chromedriver and add it to ENV
+version=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
+wget "https://chromedriver.storage.googleapis.com/${version}/chromedriver_linux64.zip"
 unzip chromedriver_linux64.zip
 CHROMEDRIVER="path-to-chromedriver"
 
