@@ -151,7 +151,8 @@ def download_image(url):
     url_path=url.split('/')
     #https......./2k6h41.jpg -> 2k6h41
     name = url_path[len(url_path)-1]
-    static_path = 'static/images/'+name
+    #print(os.path.abspath(os.getcwd()))
+    static_path = 'website/static/images/'+name
     try:
         f = open(static_path,'rb')
         f.close()
@@ -161,6 +162,7 @@ def download_image(url):
         f = open(static_path, 'wb')
         f.write(request.content)
         f.close()
+    return
 
 def get_movie_info(driver, href):
     """Returns a dictionary with info about a given movie 
@@ -199,7 +201,8 @@ def get_movie_info(driver, href):
             img_url_src = img_body_div.find('img', class_='movie-information__poster-section-image au-target')['src']
             img_url = img_url_src.split('?')[0]
             download_image(img_url)
-        except:
+        except Exception as e:
+            print(e.stacktrace())
             img_url ="FAILED_EXTRACTION"
         all_info = {"Directors":info[0],"Actors":info[1],"Genre":genre,"Original_title":info[2],
         "Original_language":info[3],"Date":info[4],"Description":movie_description,"Img_url": img_url}
@@ -214,7 +217,7 @@ def write_csv(all_info):
     Args:
         all_info (List): A list containing all the movies found
     """    
-    with open ("filmstaden.csv",mode="w") as csv_file:
+    with open ("scraper/filmstaden.csv", mode="w") as csv_file:
         fieldnames = ["Index","Directors","Actors","Genre","Original_title","Original_language","Date","Description","Img_url"]
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writeheader()
