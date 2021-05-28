@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Recommended movies</h1>
+<ul class="movie-list"></ul>
+{% for movie in movies %}
+<article class="media content-section">
+    <img class="container.sm movie-img" src="{{ url_for('static', filename='images/' + movie[-1]) }}"/>
+    <div class="media-body">
+      <h2><a class="article-title">{{ movie[4] }}</a></h2>
+      <p class="article-content">{{ movie[-2] }}</p>
+    </div>
+  </article>
+{% endfor %}
+{% endblock content %}
+
