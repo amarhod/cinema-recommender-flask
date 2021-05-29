@@ -1,14 +1,13 @@
 import os
-# import pprint
 import logging
 from flask import Flask, render_template, url_for, flash, redirect, request
 from flask_classful import FlaskView, route
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired
-from recommender.utils import get_movie_list, match_movie
-from recommender.recommender import Recommender
-from database_handler import DatabaseHandler
+from agents.recommender.utils import get_movie_list, match_movie
+from agents.recommender.recommender import Recommender
+from database.database_handler import DatabaseHandler
 
 
 SECRET_KEY = os.urandom(32)
@@ -16,7 +15,7 @@ logging.basicConfig()
 logging.root.setLevel(20)
 logger = logging.getLogger(' Flask website agent ')
 log = logging.getLogger('werkzeug')
-#log.disabled = True
+log.disabled = True
 
 
 class Website():
@@ -24,8 +23,6 @@ class Website():
         self.app = Flask(__name__)
         self.app.config['SECRET_KEY'] = SECRET_KEY
         logger.info('[Configuration] Configuring website agent')
-        # self.recommender = movies
-        # self.movies = movies
         self.cinemaview = CinemaView()
         self.cinemaview.register(self.app, route_base='/')
 
@@ -58,7 +55,6 @@ class CinemaView(FlaskView):
         if request.method == 'POST':
             title = request.form['name']
             rating = request.form['rating']
-            #print("POSTing title: " + title + " with rating: " + rating)
             movie = match_movie(title, get_movie_list())
             movie['Rating'] = rating
             with DatabaseHandler("user1") as db:
@@ -69,9 +65,7 @@ class CinemaView(FlaskView):
         final_recommendations = []
         recommender = Recommender()
         with DatabaseHandler('user1') as handler:
-            #movies_seen = handler.read_all_rows()
             recommended_movies_indexes = recommender.get_recommendations()[1]
-            #from the movies list in theater, extract the indexes that match with the ones that the get recommendations returned
             for i in range(len(recommended_movies_indexes)):
                 for j in range(len(recommender.movies)):
                     if recommended_movies_indexes[i] == recommender.movies[j][0]:

@@ -3,7 +3,6 @@ from pathlib import Path
 import os
 
 
-#Finds the movie object for a given title
 def match_movie(title, movies):
   movie_dict = {}
   for movie in movies:
@@ -19,9 +18,8 @@ def match_movie(title, movies):
   return None
 
 def read_file(filename='filmstaden.csv'):
-    path = Path(os.path.abspath(os.getcwd()))
-    new_path = path.parents[0].joinpath('agents/scraper/' + filename)
-    df = pd.read_csv(new_path)
+    path = os.path.abspath(os.getcwd()) + '/agents/scraper/' + filename
+    df = pd.read_csv(path)
     df = df[['Index','Directors','Actors','Genre','Original_title','Original_language','Date','Description','Img_url']]
     df.fillna('') #fill in empty values cells
     df['Original_title'] = df['Original_title'].str.strip()
@@ -36,11 +34,3 @@ def get_movie_list():
     name = url_path[len(url_path)-1]
     movie[-1] = name
   return movie_list
-
-if __name__ == '__main__':
-  movies = get_movie_list()
-  title = 'After we collided'
-  movie = match_movie(title, movies)
-  for (index, value) in enumerate(movie):
-    print(index, value)
-    print()

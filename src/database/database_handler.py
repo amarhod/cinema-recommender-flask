@@ -10,22 +10,22 @@ logger = logging.getLogger(' Database ')
 
 class DatabaseHandler:
     def __init__(self, name='user1'):
-        logger.info('[Communication] connecting to Database')
-        self.conn = sqlite3.connect('watched.db')
+        logger.info('[Communication] Fetching information from Database')
+        self.conn = sqlite3.connect('database/watched.db')
         self.cursor = self.conn.cursor()
         self.table_name = name
     
     def __enter__(self):
         return self        
 
-    def __exit__(self,exception_type, exception_value, traceback):
+    def __exit__(self, exception_type, exception_value, traceback):
         self.conn.commit()
         self.conn.close()
 
     def start(self, user_name='user1'):
         logger.info('[Configuration] Creating mock user with movie history')
         self.create_table(user_name)
-        with open('mock_history.json', 'r') as f:
+        with open('database/mock_history.json', 'r') as f:
             seen_movies = json.load(f)
         for movie in seen_movies:
             self.store(movie)

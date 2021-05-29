@@ -98,7 +98,7 @@ def get_driver():
     try:
         driver = webdriver.Chrome(options=chrome_options, executable_path=DRIVER)
     except:
-        logger.error('Chromedriver was not found')
+        logger.error('[Error] Chromedriver was not found')
     return driver
 
 def get_all_movie_links(page_source):
@@ -152,7 +152,7 @@ def download_image(url):
     #https......./2k6h41.jpg -> 2k6h41
     name = url_path[len(url_path)-1]
     #print(os.path.abspath(os.getcwd()))
-    static_path = 'website/static/images/'+name
+    static_path = 'agents/website/static/images/'+name
     try:
         f = open(static_path,'rb')
         f.close()
@@ -217,7 +217,7 @@ def write_csv(all_info):
     Args:
         all_info (List): A list containing all the movies found
     """    
-    with open ("scraper/filmstaden.csv", mode="w") as csv_file:
+    with open ("agents/scraper/filmstaden.csv", mode="w") as csv_file:
         fieldnames = ["Index","Directors","Actors","Genre","Original_title","Original_language","Date","Description","Img_url"]
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writeheader()
