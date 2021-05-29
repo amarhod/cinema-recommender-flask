@@ -59,7 +59,7 @@ class CinemaView(FlaskView):
             movie['Rating'] = rating
             with DatabaseHandler("user1") as db:
                 db.store(movie)
-        return render_template('home.html', title='Home')
+        return redirect('recommendations')
 
     def recommendations(self):
         final_recommendations = []
