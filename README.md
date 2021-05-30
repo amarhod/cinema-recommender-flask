@@ -13,29 +13,23 @@ By scraping current movies on cinema (Filmstaden), the user gets recommendations
 How to run in the terminal:
 ```
 1. Create a virtual environment and install dependencies
-pip3 install virtualenv
-virtualenv env
-source env/bin/activate
-pip3 install -r requirements.txt
+$ pip3 install virtualenv
+$ virtualenv env
+$ source env/bin/activate
+(env) $ pip3 install -r requirements.txt
 
 2. Install Chrome browser
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-sudo dpkg -i google-chrome-stable_current_amd64.deb
+$ wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+$ sudo dpkg -i google-chrome-stable_current_amd64.deb
 
 3. Install latest chromedriver and add it to ENV
-version=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
-wget "https://chromedriver.storage.googleapis.com/${version}/chromedriver_linux64.zip"
-unzip chromedriver_linux64.zip
-CHROMEDRIVER="path-to-chromedriver"
+$ version=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
+$ wget "https://chromedriver.storage.googleapis.com/${version}/chromedriver_linux64.zip"
+$ unzip chromedriver_linux64.zip
+$ CHROMEDRIVER="path-to-chromedriver"
 
-4. Scrape movies from Filmstaden
-python3 scraper.py
-
-5. Create a local DB with a mock user
-python3 test_user1.py
-
-6. Run Flask website
-flask run
+4. Run multi-agent system  
+(env) $ python3 mas.py
 ```
 ## Demo
 <img src=Demo.gif width=100% height=100%>
