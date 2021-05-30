@@ -5,8 +5,8 @@ from agents.recommender import recommender
 
 
 if __name__ == '__main__':
-    # scraper = scraper.WebScraperAgent()
-    # scraper.start()
+    scraper = scraper.WebScraperAgent()
+    scraper.start()
     database = db.DatabaseHandler()
     database.start()
     website = app.Website()

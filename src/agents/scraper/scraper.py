@@ -94,7 +94,7 @@ def get_driver():
         webdriver: Chrome webdriver
     """    
     chrome_options = Options()
-    #chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--headless")
     try:
         driver = webdriver.Chrome(options=chrome_options, executable_path=DRIVER)
     except:
@@ -156,7 +156,7 @@ def download_image(url):
     try:
         f = open(static_path,'rb')
         f.close()
-        print("image already stored")
+        #print("image already stored")
     except:
         request = requests.get(url)
         f = open(static_path, 'wb')
