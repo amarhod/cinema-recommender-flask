@@ -1,13 +1,19 @@
 ## Cinema recommender
 
 A cinema recommender implemented in Flask.
-By scraping current movies on cinema (Filmstaden), the user gets recommendations based on similarity score with prior watched movies.
+By scraping current movies on cinema (Filmstaden), the user gets recommendations based on similarity score with previously watched movies.
+The architecture is a multi-agent system (mas) that consists of: 
+* Web scraping agent
+* Recommendation agent
+* Website agent
+* Local database
 
 ## Code functionality 
-- **scraper** - Scrapes Filmstaden for current movies and stores movie information in a .csv file as well as storing the movie posters locally.
-- **recommender** - Based on previously seen movies and the rating by the user, finds current movies with the highest similarity score (cosine similarity).
-- **database_handler** - Handles all the interaction with the local SQLite DB.
-- **app** - Flask app that displays all the movies on cinema and the recommended movies for a mock user. The user can enter rating on a given movie so that it gets stored in the user DB.
+- **scraper (agent)** - Scrapes current movies from Filmstaden and stores the information locally.
+- **recommender (agent)** - Finds current movies with the highest similarity score (cosine similarity) based on a user's previously seen movies and ratings.
+- **website (agent)** - Displays all the movies on cinema and the recommended movies for a user. The user can also rate movies on the website which are persisted in the DB.
+- **database** - Handles all the interaction with the local SQLite DB.
+- **mas** -  Coordinates the agents to scrape, recommend and display the website.
   
 ## How to run
 How to run in the terminal:
