@@ -26,6 +26,6 @@ sklearn==0.0
 soupsieve==2.1
 threadpoolctl==2.1.0
 tqdm==4.54.1
-urllib3==1.26.4
+urllib3==1.26.5
 Werkzeug==1.0.1
 WTForms==2.3.3
